@@ -1,5 +1,5 @@
-# Definición de gramáticas originales
-# 'e' = epsilon (cadena vacía)
+# Gramaticas originales de los ejercicios
+# 'e' representa epsilon (vacio)
 
 EJERCICIO_1 = {
     'S': [['A', 'uno', 'B', 'C'], ['S', 'dos']],
