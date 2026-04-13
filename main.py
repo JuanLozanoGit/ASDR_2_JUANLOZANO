@@ -1,27 +1,36 @@
-from gramatica import EJERCICIO_1, EJERCICIO_2
-from procesador import ProcesadorGramatica
+from gramatica import EJERCICIO_1, EJERCICIO_2, EJERCICIO_3
+from solver import Procesador
 
-def ejecutar_analisis(id_ej, gram):
-    print(f"\n{'#'*30}")
-    print(f"   EJERCICIO {id_ej}")
-    print(f"{'#'*30}")
+def resolver(num, g):
+    print("\n" + "="*60)
+    print(f"            ANÁLISIS EJERCICIO {num}")
+    print("="*60)
     
-    proc = ProcesadorGramatica(gram)
-    print("Gramatica Original:")
-    proc.mostrar()
+    p = Procesador(f"EJ{num}", g)
+    # 1. Mostrar original
+    print("Gramática Original:")
+    for nt, reglas in g.items():
+        print(f"  {nt} -> {' | '.join([' '.join(r) for r in reglas])}")
+        
+    # 2. Transformar
+    p.eliminar_recursividad()
     
-    # Transformacion
-    proc.eliminar_recursividad()
-    print("\nGramatica Transformada:")
-    proc.mostrar()
+    # 3. Calcular conjuntos
+    # Llenamos FIRST primero
+    for nt in p.g: p.calc_first(nt)
+    p.calc_follow()
     
-    # Calculos
-    proc.calcular_tablas()
+    # 4. Mostrar resultados
+    print("\nConjuntos FIRST:")
+    for nt, s in p.first.items(): print(f"  FIRST({nt}) = {s}")
     
-    print("\n--- Analizador Sintactico (ASDR) ---")
-    print("Simulando proceso de emparejar (match) para cadena de prueba...")
-    # Aqui iria la logica de consumo de tokens basado en PREDICT
+    print("\nConjuntos FOLLOW:")
+    for nt, s in p.follow.items(): print(f"  FOLLOW({nt}) = {s}")
+    
+    p.generar_predict()
+    p.esquema_asdr()
 
 if __name__ == "__main__":
-    ejecutar_analisis(1, EJERCICIO_1)
-    ejecutar_analisis(2, EJERCICIO_2)
+    resolver(1, EJERCICIO_1)
+    resolver(2, EJERCICIO_2)
+    resolver(3, EJERCICIO_3)
