@@ -1,7 +1,6 @@
-# Gramaticas originales
-# 'e' = epsilon
+# Gramaticas originales para el laboratorio
+# 'e' representa la cadena vacia (epsilon)
 
-# Esta tiene recursividad izquierda (S -> S dos)
 EJERCICIO_1 = {
     'S': [['A', 'uno', 'B', 'C'], ['S', 'dos']],
     'A': [['B', 'C', 'D'], ['A', 'tres'], ['e']],
@@ -16,4 +15,11 @@ EJERCICIO_2 = {
     'B': [['C', 'D'], ['tres'], ['e']],
     'C': [['cuatro', 'A', 'B'], ['cinco']],
     'D': [['seis'], ['e']]
+}
+
+EJERCICIO_3 = {
+    'S': [['A', 'dos'], ['e']],
+    'A': [['B', 'uno', 'S']],
+    'B': [['tres', 'C'], ['e']],
+    'C': [['cuatro'], ['cinco']]
 }
