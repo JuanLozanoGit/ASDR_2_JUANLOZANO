@@ -1,5 +1,5 @@
-# Gramaticas de entrada - Sergio Arboleda
-# 'e' = epsilon (cadena vacia)
+# Definición de gramáticas originales
+# 'e' = epsilon (cadena vacía)
 
 EJERCICIO_1 = {
     'S': [['A', 'uno', 'B', 'C'], ['S', 'dos']],
