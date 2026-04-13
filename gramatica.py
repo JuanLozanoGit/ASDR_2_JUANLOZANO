@@ -1,6 +1,4 @@
-# Gramaticas originales de los ejercicios
-# 'e' representa epsilon (vacio)
-
+# Gramaticas originales (e = epsilon)
 EJERCICIO_1 = {
     'S': [['A', 'uno', 'B', 'C'], ['S', 'dos']],
     'A': [['B', 'C', 'D'], ['A', 'tres'], ['e']],
