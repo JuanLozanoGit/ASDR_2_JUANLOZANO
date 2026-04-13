@@ -5,59 +5,61 @@ class Procesador:
         self.first = {}
         self.follow = {}
 
-    def mostrar_paso_a_paso(self):
-        print(f"\n{'='*60}")
-        print(f"  REVISIÓN TÉCNICA: {self.nombre}")
-        print(f{'='*60}")
+    def ejecutar_analisis_completo(self):
+        print("\n" + "="*60)
+        print(f" ANALISIS PASO A PASO: {self.nombre}")
+        print("="*60)
 
-        # 1. RECURSIVIDAD
-        print("\n1. REVISIÓN DE RECURSIVIDAD POR LA IZQUIERDA:")
+        # --- PASO 1: RECURSIVIDAD ---
+        print("\n[1] REVISION DE RECURSIVIDAD IZQUIERDA:")
         nueva_g = {}
         for nt, reglas in self.g.items():
             recursivas = [r for r in reglas if r[0] == nt]
             if recursivas:
-                print(f"   [!] {nt} es recursiva. Transformando...")
+                print(f"    - Detectada en {nt}. Aplicando transformacion A -> bA' / A' -> aA'...")
                 nt_p = nt + "p"
                 no_rec = [r for r in reglas if r[0] != nt]
                 nueva_g[nt] = [r + [nt_p] for r in no_rec]
                 nueva_g[nt_p] = [r[1:] + [nt_p] for r in recursivas] + [['e']]
-                print(f"       -> {nt} ahora es: {nueva_g[nt]}")
-                print(f"       -> {nt_p} ahora es: {nueva_g[nt_p]}")
+                print(f"      Antes: {nt} -> {reglas}")
+                print(f"      Despues: {nt} -> {nueva_g[nt]} | {nt_p} -> {nueva_g[nt_p]}")
             else:
-                print(f"   [OK] {nt} no tiene recursividad izquierda.")
                 nueva_g[nt] = reglas
         self.g = nueva_g
 
-        # 2. CONJUNTOS
-        print("\n2. CÁLCULO DE CONJUNTOS:")
-        self._calc_sets()
+        # --- PASO 2: FIRST Y FOLLOW ---
+        print("\n[2] CALCULO DE CONJUNTOS:")
+        self._calcular_conjuntos()
         for nt in self.g:
-            print(f"   NT {nt}: FIRST = {self.first[nt]}, FOLLOW = {self.follow[nt]}")
+            print(f"    - {nt}: FIRST = {self.first[nt]}, FOLLOW = {self.follow[nt]}")
 
-        # 3. ESQUEMA ANALIZADOR (Lógica de decisión)
-        print("\n3. ESQUEMA DEL ANALIZADOR (LÓGICA ASDR):")
+        # --- PASO 3: LOGICA ASDR ---
+        print("\n[3] ESQUEMA DE DECISION (ASDR):")
         for nt, reglas in self.g.items():
-            print(f"\n   Al procesar el No Terminal '{nt}':")
+            print(f"\n    Para el No Terminal '{nt}':")
             for r in reglas:
+                # Calcular prediccion para la regla
                 f_r = self._get_first_seq(r)
                 pred = f_r - {'e'}
                 if 'e' in f_r: pred.update(self.follow[nt])
                 
-                print(f"      - Si el token es {pred}:")
-                print(f"        ENTONCES aplicar regla: {' '.join(r)}")
+                print(f"      * Si el proximo token es {pred}:")
+                print(f"        -> Se expande con la regla: {' '.join(r)}")
 
-    def _calc_sets(self):
-        # Lógica simplificada de First/Follow
+    def _calcular_conjuntos(self):
+        # Primero calculamos FIRST
         for nt in self.g: self.first[nt] = self._get_first_nt(nt)
+        # Luego FOLLOW
         self.follow = {nt: set() for nt in self.g}
         self.follow[list(self.g.keys())[0]].add('$')
-        for _ in range(3): # Estabilización
+        for _ in range(5): # Iteracion para estabilizar conjuntos
             for nt, reglas in self.g.items():
                 for r in reglas:
                     for i, simb in enumerate(r):
-                        if simb[0].isupper():
+                        if simb in self.g: # Es No Terminal
                             sig = r[i+1:]
-                            if not sig: self.follow[simb].update(self.follow[nt])
+                            if not sig:
+                                self.follow[simb].update(self.follow[nt])
                             else:
                                 f_sig = self._get_first_seq(sig)
                                 self.follow[simb].update(f_sig - {'e'})
