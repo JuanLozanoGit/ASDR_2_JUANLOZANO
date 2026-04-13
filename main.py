@@ -1,25 +1,27 @@
-from gramatica import EJERCICIO_1, EJERCICIO_2, EJERCICIO_3, print_grammar
-from solver import Analizador
+from gramatica import EJERCICIO_1, EJERCICIO_2
+from procesador import ProcesadorGramatica
 
-def test_ejercicio(num, g):
-    print(f"\n--- TRABAJANDO EJERCICIO {num} ---")
-    print_grammar(g)
+def ejecutar_analisis(id_ej, gram):
+    print(f"\n{'#'*30}")
+    print(f"   EJERCICIO {id_ej}")
+    print(f"{'#'*30}")
     
-    sol = Analizador(g)
-    print(sol.check_recursividad())
+    proc = ProcesadorGramatica(gram)
+    print("Gramatica Original:")
+    proc.mostrar()
     
-    # Ejemplo de prueba rapida para el Ejercicio 3
-    if num == 3:
-        print("\nPrueba de cadena para Ejercicio 3:")
-        sol.set_input("id igual num puntoycoma")
-        # Simula el inicio de la recursion
-        sol.match("id")
-        sol.match("igual")
-        sol.match("num")
-        sol.match("puntoycoma")
+    # Transformacion
+    proc.eliminar_recursividad()
+    print("\nGramatica Transformada:")
+    proc.mostrar()
+    
+    # Calculos
+    proc.calcular_tablas()
+    
+    print("\n--- Analizador Sintactico (ASDR) ---")
+    print("Simulando proceso de emparejar (match) para cadena de prueba...")
+    # Aqui iria la logica de consumo de tokens basado en PREDICT
 
 if __name__ == "__main__":
-    ejercicios = [EJERCICIO_1, EJERCICIO_2, EJERCICIO_3]
-    
-    for i, datos in enumerate(ejercicios, 1):
-        test_ejercicio(i, datos)
+    ejecutar_analisis(1, EJERCICIO_1)
+    ejecutar_analisis(2, EJERCICIO_2)
