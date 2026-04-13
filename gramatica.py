@@ -1,5 +1,5 @@
-# Gramaticas originales para el laboratorio
-# 'e' representa la cadena vacia (epsilon)
+# Gramaticas de entrada - Sergio Arboleda
+# 'e' = epsilon (cadena vacia)
 
 EJERCICIO_1 = {
     'S': [['A', 'uno', 'B', 'C'], ['S', 'dos']],
@@ -18,8 +18,7 @@ EJERCICIO_2 = {
 }
 
 EJERCICIO_3 = {
-    'S': [['A', 'dos'], ['e']],
-    'A': [['B', 'uno', 'S']],
-    'B': [['tres', 'C'], ['e']],
-    'C': [['cuatro'], ['cinco']]
+    'S': [['A', 'B']],
+    'A': [['uno', 'S'], ['e']],
+    'B': [['dos', 'A'], ['tres']]
 }
